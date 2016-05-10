@@ -347,6 +347,15 @@ export default class Robot extends EventEmitter {
   }
 
   /**
+   * Disconnet from RTM
+   *
+   * @public
+   */
+  disconnect() {
+    this._rtm.disconnect();
+  }
+
+  /**
    * Handle message object from websocket connection
    *
    * @private
