@@ -42,6 +42,7 @@ export default class Request {
     this.params = params;
     this.matches = matches;
     this.listener = listener;
+    this.attachments = message.attachments;
 
     Object.defineProperty(this, 'user', {
       enumerable: false,
