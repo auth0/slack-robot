@@ -24,7 +24,6 @@ export default class Message {
         channelId = messageObject.channel;
         value = parseTextMessage(dataStore, bot, messageObject.text);
         timestamp = messageObject.ts;
-        attachments = messageObject.attachments;
         break;
       case MESSAGE_TYPE.REACTION_ADDED:
         channelId = messageObject.item.channel;
@@ -43,7 +42,7 @@ export default class Message {
     this.timestamp = timestamp;
     this.type = type;
     this.value = value;
-    this.attachments = attachments;
+    this.attachments = messageObject.attachments;
   }
 }
 /**

@@ -3,7 +3,8 @@ export default class Request {
     const message = {
       type: msg.type,
       value: msg.value,
-      timestamp: msg.timestamp
+      timestamp: msg.timestamp,
+      attachments: msg.attachments
     };
     const from = msg.from;
     const to = msg.to;

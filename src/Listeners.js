@@ -65,7 +65,7 @@ export default class Listeners {
 
     switch (type) {
       case 'message':
-        value = message.value.text;
+        value = message.value.text || message.attachments && message.attachments[0] && message.attachments[0].title;
         break;
       case 'reaction_added':
         value = message.value.emoji;
