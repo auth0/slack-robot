@@ -65,7 +65,13 @@ export default class Listeners {
 
     switch (type) {
       case 'message':
-        value = message.value.text || message.attachments && message.attachments[0] && message.attachments[0].title;
+      if (message.subtype === 'file_share') {
+          value = message.file && message.file.title;
+          console.log('File share!', message.file.title);
+        } else {
+          value = message.value.text || message.attachments && message.attachments[0] && message.attachments[0].title;
+        }
+
         break;
       case 'reaction_added':
         value = message.value.emoji;

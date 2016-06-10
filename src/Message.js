@@ -42,6 +42,7 @@ export default class Message {
     this.timestamp = timestamp;
     this.type = type;
     this.value = value;
+    this.file = messageObject.file;
     this.attachments = messageObject.attachments;
   }
 }

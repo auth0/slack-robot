@@ -2,9 +2,11 @@ export default class Request {
   constructor(msg, listener) {
     const message = {
       type: msg.type,
+      subtype: msg.subtype,
       value: msg.value,
       timestamp: msg.timestamp,
-      attachments: msg.attachments
+      attachments: msg.attachments,
+      file: msg.file
     };
     const from = msg.from;
     const to = msg.to;
@@ -29,11 +31,12 @@ export default class Request {
     }
 
     if (message.type === 'message') {
-      params = getParams(message.value.text, listener.value, listener.matcher);
+      var text = message.subtype === 'file_share' ? message.file.title : message.value.text;
+      params = getParams(text, listener.value, listener.matcher);
 
       // do not fill matches when params exist
       if (Object.keys(params).length === 0) {
-        matches = getMatches(message.value.text, listener.matcher);
+        matches = getMatches(text, listener.matcher);
       }
     }
 
