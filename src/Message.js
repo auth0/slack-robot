@@ -41,6 +41,7 @@ export default class Message {
     this.to = to;
     this.timestamp = timestamp;
     this.type = type;
+    this.subtype = messageObject.subtype;
     this.value = value;
     this.file = messageObject.file;
     this.attachments = messageObject.attachments;
