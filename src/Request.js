@@ -47,6 +47,8 @@ export default class Request {
     this.matches = matches;
     this.listener = listener;
     this.attachments = message.attachments;
+    this.file = message.file;
+    this.subtype = message.subtype;
 
     Object.defineProperty(this, 'user', {
       enumerable: false,
