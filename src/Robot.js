@@ -1,8 +1,7 @@
 import Log from 'log';
 import EventEmitter from 'eventemitter3';
 import Promise from 'bluebird';
-import { RtmClient, WebClient, CLIENT_EVENTS, RTM_EVENTS as MESSAGE_TYPE } from 'slack-client';
-import { MemoryDataStore } from 'slack-client/lib/data-store';
+import { RtmClient, WebClient, MemoryDataStore, CLIENT_EVENTS, RTM_EVENTS as MESSAGE_TYPE } from '@slack/client';
 import Listeners from './Listeners';
 import Message from './Message';
 import Request from './Request';

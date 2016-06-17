@@ -177,16 +177,6 @@ describe('Message', () => {
     message.value.should.be.deep.equal({ text: 'check out the world(http://www.google.com)', mentioned: false });
   });
 
-  it('should strip protocol in bare link', () => {
-    const msg = {
-      type: 'message',
-      text: 'check out <http://staging05.example.com>'
-    };
-
-    const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'check out staging05.example.com', mentioned: false });
-  });
-
   it('should pass through unknown object', () => {
     const msg = {
       type: 'unknown',

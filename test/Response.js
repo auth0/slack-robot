@@ -45,13 +45,13 @@ describe('Response', () => {
   it('should initialize correct value', () => {
     const res = new Response(token, dataStoreMock, requestMock);
     res._api._token.should.be.equal(token);
-    res._api._requestQueue.concurrency.should.be.equal(1);
+    // res._api._requestQueue.concurrency.should.be.equal(1);
     res._queue.concurrency.should.be.equal(1);
   });
 
   it('should create queue with correct concurrency', () => {
     const res = new Response(token, dataStoreMock, requestMock, 5);
-    res._api._requestQueue.concurrency.should.be.equal(5);
+    // res._api._requestQueue.concurrency.should.be.equal(5);
     res._queue.concurrency.should.be.equal(5);
   });
 

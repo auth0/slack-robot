@@ -39,6 +39,9 @@ describe('Request', () => {
         text: 'something',
         mentioned: false
       },
+      attachments: undefined,
+      file: undefined,
+      subtype: undefined,
       timestamp: '1324873.03284'
     };
 

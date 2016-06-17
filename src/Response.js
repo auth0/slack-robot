@@ -4,7 +4,7 @@ import fs from 'fs';
 import request from 'request';
 import Promise from 'bluebird';
 import EventEmitter from 'eventemitter3';
-import { WebClient } from 'slack-client';
+import { WebClient } from '@slack/client';
 import {
   RESPONSE_EVENTS
 } from './Events';
