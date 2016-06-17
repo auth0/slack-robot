@@ -18,8 +18,7 @@ const USER_PREFIX = 'user__';
 const MPIM_PREFIX = 'mpim__';
 
 const DEFAUT_POST_MESSAGE_OPTS = {
-  as_user: true,
-  parse: 'full'
+  as_user: true
 };
 
 const TASK_TYPES = {
