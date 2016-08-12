@@ -59,6 +59,7 @@ export default class Message {
  */
 function parseTextMessage(dataStore, bot, textMessage) {
   let mentioned = false;
+  let explicitMention = false;
 
   if (!textMessage) {
     textMessage = '';
@@ -105,6 +106,9 @@ function parseTextMessage(dataStore, bot, textMessage) {
   text = text.replace(/&amp;/g, '&');
 
   const botMatcher = new RegExp(`@?${bot.name}:?`);
+  const explicitBotMatcher = new RegExp(`@${bot.name}:?`);
+  explicitMention = !!text.match(explicitBotMatcher);
+
   if (text.match(botMatcher)) {
     mentioned = true;
     text = text.split(botMatcher).map(x => x.trim()).join(' ').trim();
@@ -112,6 +116,7 @@ function parseTextMessage(dataStore, bot, textMessage) {
 
   return {
     text,
-    mentioned
+    mentioned,
+    explicitMention
   };
 }

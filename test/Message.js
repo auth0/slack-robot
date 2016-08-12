@@ -46,7 +46,7 @@ describe('Message', () => {
     message.from.should.be.deep.equal(userMock);
     message.to.should.be.deep.equal(channelMock);
     message.timestamp.should.be.equal(timestampMock);
-    message.value.should.be.deep.equal({ text: 'Hello', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'Hello', mentioned: false, explicitMention: false });
   });
 
   it('should parse text with mention', () => {
@@ -58,7 +58,7 @@ describe('Message', () => {
       ts: timestampMock
     };
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'Hello', mentioned: true });
+    message.value.should.be.deep.equal({ text: 'Hello', mentioned: true, explicitMention: true });
   });
 
   it('should parse text with soft mention', () => {
@@ -70,7 +70,7 @@ describe('Message', () => {
       ts: timestampMock
     };
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'Hello', mentioned: true });
+    message.value.should.be.deep.equal({ text: 'Hello', mentioned: true, explicitMention: false });
   });
 
   it('should parse reaction message', () => {
@@ -123,7 +123,7 @@ describe('Message', () => {
       text: 'hello <@D1234|satya>'
     };
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'hello @satya', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'hello @satya', mentioned: false, explicitMention: false });
   });
 
   it('should remove channel formatting', () => {
@@ -132,7 +132,7 @@ describe('Message', () => {
       text: 'in <#C1214|general>'
     };
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'in #general', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'in #general', mentioned: false, explicitMention: false });
   });
 
   it('should change userId to username', () => {
@@ -143,7 +143,7 @@ describe('Message', () => {
 
     dataStore.getUserById.withArgs('D1234').returns({ name: 'satya' });
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'hello @satya', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'hello @satya', mentioned: false, explicitMention: false });
   });
 
   it('should change channel to username', () => {
@@ -154,7 +154,7 @@ describe('Message', () => {
 
     dataStore.getChannelById.withArgs('C1214').returns({ name: 'general' });
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'in #general', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'in #general', mentioned: false, explicitMention: false });
   });
 
   it('should change group mention using @', () => {
@@ -164,7 +164,7 @@ describe('Message', () => {
     };
 
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'hi @channel', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'hi @channel', mentioned: false, explicitMention: false });
   });
 
   it('should format incoming link', () => {
@@ -174,7 +174,7 @@ describe('Message', () => {
     };
 
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'check out the world(http://www.google.com)', mentioned: false });
+    message.value.should.be.deep.equal({ text: 'check out the world(http://www.google.com)', mentioned: false, explicitMention: false });
   });
 
   it('should pass through unknown object', () => {
@@ -194,6 +194,6 @@ describe('Message', () => {
     };
 
     const message = new Message(bot, dataStore, msg);
-    message.value.should.be.deep.equal({ text: 'wat', mentioned: true });
+    message.value.should.be.deep.equal({ text: 'wat', mentioned: true, explicitMention: true });
   });
 });
