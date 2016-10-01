@@ -69,7 +69,7 @@ export default class Listeners {
           value = message.file && message.file.title;
           console.log('File share!', message.file.title);
         } else {
-          value = message.value.text || message.attachments && message.attachments[0] && message.attachments[0].title;
+          value = message.value.text || message.attachments && message.attachments[0] && (message.attachments[0].title || message.attachments[0].text || '') ;
         }
 
         break;
