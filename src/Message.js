@@ -11,7 +11,7 @@ import { stripEmoji } from './util';
 export default class Message {
   constructor(bot, dataStore, messageObject) {
     const type = messageObject.type;
-    const from = dataStore.getUserById(messageObject.user);
+    const from = dataStore.getUserById(messageObject.user) || messageObject.user || messageObject.username;
 
     let to;
     let channelId;
