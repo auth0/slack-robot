@@ -65,11 +65,10 @@ export default class Listeners {
 
     switch (type) {
       case 'message':
-      if (message.subtype === 'file_share') {
+        if (message.subtype === 'file_share') {
           value = message.file && message.file.title;
-          console.log('File share!', message.file.title);
         } else {
-          value = message.value.text || message.attachments && message.attachments[0] && (message.attachments[0].title || message.attachments[0].text || '') ;
+          value = message.value.text || message.attachments && message.attachments[0] && (message.attachments[0].title || message.attachments[0].text || '');
         }
 
         break;

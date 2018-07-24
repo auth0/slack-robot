@@ -41,9 +41,9 @@ export default class Message {
     this.to = to;
     this.timestamp = timestamp;
     this.type = type;
-    this.subtype = messageObject.subtype;
+    this.subtype = messageObject.files && messageObject.files.length > 0 && 'file_share';
     this.value = value;
-    this.file = messageObject.file;
+    this.file = messageObject.files && messageObject.files[0];
     this.attachments = messageObject.attachments;
   }
 }
