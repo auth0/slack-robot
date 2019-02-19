@@ -7,8 +7,8 @@ import Robot from '../src/Robot';
 import Listeners from '../src/Listeners';
 import Response from '../src/Response';
 import Log from 'log';
-import { RtmClient, WebClient } from '@slack/client';
-import Chat from '@slack/client/lib/clients/web/facets/chat';
+import { RTMClient, WebClient } from '@slack/client';
+// import Chat from '@slack/client/lib/clients/web/facets/chat';
 import plugins from '../src/plugins';
 
 chai.use(sinonChai);
@@ -21,7 +21,7 @@ describe('Robot', () => {
     robot._options.should.be.deep.equal({ dynamicMention: false });
     robot._vars.concurrency.should.be.equal(1);
     robot._ignoredChannels.should.be.deep.equal([]);
-    robot._rtm.should.be.instanceof(RtmClient);
+    robot._rtm.should.be.instanceof(RTMClient);
     robot._api.should.be.instanceof(WebClient);
     // robot._api._requestQueue.concurrency.should.be.equal(5);
     robot._listeners.should.be.instanceof(Listeners);
@@ -290,7 +290,7 @@ describe('Robot', () => {
   it('should only connect to websocket when started', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
 
     robot.start();
     wsStartStub.should.be.calledOnce;
@@ -300,8 +300,8 @@ describe('Robot', () => {
   it('should listen to authenticated event from websocket', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const loggerStub = sinon.stub(Log.prototype, 'info');
 
     // mock dataStore
@@ -331,8 +331,8 @@ describe('Robot', () => {
   it('should listen to message event from websocket', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const messageDataMock = {
       type: 'message',
@@ -356,8 +356,8 @@ describe('Robot', () => {
   it('should listen to reaction_added event from websocket', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const reactionDataMock = {
       type: 'reaction_added',
@@ -394,8 +394,8 @@ describe('Robot', () => {
   it('should only listen reaction_added event in bot own message', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const reactionDataMock = {
       type: 'reaction_added',
@@ -432,8 +432,8 @@ describe('Robot', () => {
   it('should queue reaction_added event in file', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const reactionDataMock = {
       type: 'reaction_added',
@@ -468,8 +468,8 @@ describe('Robot', () => {
   it('should queue reaction_added event in file comment', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const reactionDataMock = {
       type: 'reaction_added',
@@ -505,8 +505,8 @@ describe('Robot', () => {
   it('should flush message queue if found matching message_changed event', () => {
     // use stub to prevent actual call to websocket
     const robot = new Robot('token');
-    const wsStartStub = sinon.stub(RtmClient.prototype, 'start');
-    const wsMessageStub = sinon.stub(RtmClient.prototype, 'on');
+    const wsStartStub = sinon.stub(RTMClient.prototype, 'start');
+    const wsMessageStub = sinon.stub(RTMClient.prototype, 'on');
     const messageHandlerStub = sinon.stub(Robot.prototype, '_onMessage');
     const reactionDataMock = {
       type: 'reaction_added',
@@ -821,7 +821,7 @@ describe('Robot', () => {
       }
     };
 
-    const postMessageMock = sinon.stub(Chat.prototype, 'postMessage');
+    const postMessageMock = sinon.stub(WebClient.prototype, 'apiCall');
     const listenerStub = sinon.stub(Listeners.prototype, 'find');
 
     const errorMock = new Error('something happened');
@@ -873,7 +873,7 @@ describe('Robot', () => {
       }
     };
 
-    const postMessageMock = sinon.stub(Chat.prototype, 'postMessage');
+    const postMessageMock = sinon.stub(WebClient.prototype, 'apiCall');
     const listenerStub = sinon.stub(Listeners.prototype, 'find');
 
     robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);

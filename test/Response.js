@@ -44,7 +44,7 @@ const requestMock = {
 describe('Response', () => {
   it('should initialize correct value', () => {
     const res = new Response(token, dataStoreMock, requestMock);
-    res._api._token.should.be.equal(token);
+    res._api._accessToken.should.be.equal(token);
     // res._api._requestQueue.concurrency.should.be.equal(1);
     res._queue.concurrency.should.be.equal(1);
   });

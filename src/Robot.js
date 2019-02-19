@@ -1,7 +1,7 @@
 import Log from 'log';
 import EventEmitter from 'eventemitter3';
 import Promise from 'bluebird';
-import { RtmClient, WebClient, MemoryDataStore, CLIENT_EVENTS, RTM_EVENTS as MESSAGE_TYPE } from '@slack/client';
+import { RTMClient, WebClient } from '@slack/client';
 import Listeners from './Listeners';
 import Message from './Message';
 import Request from './Request';
@@ -14,7 +14,6 @@ import {
 } from './Events';
 
 const logger = new Log('info');
-const CLIENT_RTM_EVENTS = CLIENT_EVENTS.RTM;
 
 const DEFAULT_OPTIONS = {
   dynamicMention: false
@@ -96,7 +95,7 @@ export default class Robot extends EventEmitter {
      * @param {string} token
      * @private
      */
-    this._rtm = new RtmClient(token, { dataStore: new MemoryDataStore() });
+    this._rtm = new RTMClient(token, { useRtmConnect: true });
 
     /**
      * API call via slack-client WebClient
@@ -111,6 +110,13 @@ export default class Robot extends EventEmitter {
      * @private
      */
     this._listeners = new Listeners();
+
+    this._dataStore = {
+      getDMById: function () { throw new Error('not implemented')},
+      getChannelOrGroupByName: function () { throw new Error('not implemented')},
+      getUserByName: function () { throw new Error('not implemented')},
+      getUserById: function () { throw new Error('not implemented')}
+    }
   }
 
   /**
@@ -239,7 +245,7 @@ export default class Robot extends EventEmitter {
     // in response object so user can just run res.text without having
     // to think about target id anymore
     const req = { to: { id: target[0] }, message: {} };
-    const res = new Response(this._token, this._rtm.dataStore, req, this._vars.concurrency);
+    const res = new Response(this._token, this._dataStore, req, this._vars.concurrency);
     res.setDefaultTarget(target);
 
     ['reaction', 'async'].forEach(invalidMethod => {
@@ -292,12 +298,12 @@ export default class Robot extends EventEmitter {
    * @public
    */
   start() {
-    this._rtm.on(CLIENT_RTM_EVENTS.AUTHENTICATED, () => {
+    this._rtm.on('authenticated', () => {
       this.bot = this._rtm.dataStore.getUserById(this._rtm.activeUserId);
       logger.info(`Logged in as ${this.bot.name}`);
     });
 
-    this._rtm.on(MESSAGE_TYPE.MESSAGE, message => {
+    this._rtm.on('message', message => {
       if (message.subtype === 'message_changed') {
         /**
          * This is a follow up from reaction_added event added to file object
@@ -311,7 +317,7 @@ export default class Robot extends EventEmitter {
       this._onMessage(message);
     });
 
-    this._rtm.on(MESSAGE_TYPE.REACTION_ADDED, message => {
+    this._rtm.on('reaction_added', message => {
       /**
        * reaction_added event on file does not send info about
        * current channel, so we can't use it to respond correctly.
@@ -319,7 +325,7 @@ export default class Robot extends EventEmitter {
        * event, queue them until "message_changed" event arrived. Note
        * that this is not applicable for text/attachment
        */
-      if (message.item.type !== MESSAGE_TYPE.MESSAGE) {
+      if (message.item.type !== 'message') {
         return this._queueMessage(message);
       }
 
@@ -361,7 +367,7 @@ export default class Robot extends EventEmitter {
    * @param {Object} msg
    */
   _onMessage(msg) {
-    const message = new Message(this.bot, this._rtm.dataStore, msg);
+    const message = new Message(this.bot, this._dataStore, msg);
 
     if (!message.from) {
       // ignore invalid message (no sender)
@@ -395,7 +401,7 @@ export default class Robot extends EventEmitter {
     }
 
     const request = new Request(message, listener);
-    const response = new Response(this._token, this._rtm.dataStore, request, this._vars.concurrency);
+    const response = new Response(this._token, this._dataStore, request, this._vars.concurrency);
     response.on(RESPONSE_EVENTS.TASK_ERROR, err => this.emit(ROBOT_EVENTS.RESPONSE_FAILED, err));
 
     this._checkListenerAcl(listener.acls, request, response, () => {
@@ -462,7 +468,7 @@ export default class Robot extends EventEmitter {
    */
   _getQueueEntry(message) {
     switch (message.type) {
-      case MESSAGE_TYPE.REACTION_ADDED:
+      case 'reaction_added':
         if (message.item.type === 'file') {
           return {
             id: message.item.file,
