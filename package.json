@@ -62,7 +62,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "@slack/client": "^3.5.0",
+    "@slack/client": "^4.9.0",
     "async": "^1.5.2",
     "bluebird": "^2.9.34",
     "eventemitter3": "^1.1.1",

@@ -1,4 +1,3 @@
-import { RTM_EVENTS as MESSAGE_TYPE } from '@slack/client';
 import { stripEmoji } from './util';
 
 /**
@@ -20,12 +19,12 @@ export default class Message {
     let attachments;
 
     switch (type) {
-      case MESSAGE_TYPE.MESSAGE:
+      case 'message':
         channelId = messageObject.channel;
         value = parseTextMessage(dataStore, bot, messageObject.text);
         timestamp = messageObject.ts;
         break;
-      case MESSAGE_TYPE.REACTION_ADDED:
+      case 'reaction_added':
         channelId = messageObject.item.channel;
         timestamp = messageObject.item.ts;
         value = { emoji: stripEmoji(messageObject.reaction) };

@@ -423,7 +423,7 @@ export default class Response extends EventEmitter {
 
     const form = r.form();
 
-    form.append('token', this._api._token);
+    form.append('token', this._api._accessToken);
     form.append('channels', id);
     form.append('filename', file.filename);
     form.append('filetype', getFileExtension(file.filename));
