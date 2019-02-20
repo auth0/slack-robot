@@ -278,7 +278,7 @@ export default class Response extends EventEmitter {
     if (task.target.indexOf(USER_PREFIX) > -1) {
       const userId = task.target.replace(USER_PREFIX, '');
 
-      return this._api.dm.open(userId, (err, data) => {
+      return this._api.im.open({user: userId}, (err, data) => {
         if (err) {
           return callback(err);
         }
