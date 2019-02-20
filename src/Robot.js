@@ -8,6 +8,7 @@ import Request from './Request';
 import Response from './Response';
 import plugins from './plugins';
 import acls from './acls';
+import { MemoryDataStore } from './data-store';
 import {
   ROBOT_EVENTS,
   RESPONSE_EVENTS
@@ -95,7 +96,7 @@ export default class Robot extends EventEmitter {
      * @param {string} token
      * @private
      */
-    this._rtm = new RTMClient(token, { useRtmConnect: true });
+    this._rtm = new RTMClient(token, { useRtmConnect: false });
 
     /**
      * API call via slack-client WebClient
@@ -111,12 +112,7 @@ export default class Robot extends EventEmitter {
      */
     this._listeners = new Listeners();
 
-    this._dataStore = {
-      getDMById: function () { throw new Error('not implemented')},
-      getChannelOrGroupByName: function () { throw new Error('not implemented')},
-      getUserByName: function () { throw new Error('not implemented')},
-      getUserById: function () { throw new Error('not implemented')}
-    }
+    this._dataStore = new MemoryDataStore();
   }
 
   /**
@@ -298,8 +294,11 @@ export default class Robot extends EventEmitter {
    * @public
    */
   start() {
-    this._rtm.on('authenticated', () => {
-      this.bot = this._rtm.dataStore.getUserById(this._rtm.activeUserId);
+    this._rtm.on('authenticated', (data) => {
+      if (data) {
+        this._dataStore.cacheRtmStart(data);
+      }
+      this.bot = this._dataStore.getUserById(this._rtm.activeUserId);
       logger.info(`Logged in as ${this.bot.name}`);
     });
 

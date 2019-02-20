@@ -310,7 +310,7 @@ describe('Robot', () => {
       name: 'slackbot'
     };
     robot._rtm.activeUserId = 5;
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub().withArgs(robot._rtm.activeUserId).returns(botUserMock)
     };
 
@@ -582,7 +582,7 @@ describe('Robot', () => {
   it('should emit message_no_channel, if no user specified in message payload', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub()
     };
     const messagePayload = {
@@ -599,7 +599,7 @@ describe('Robot', () => {
       done();
     });
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
 
     robot._onMessage(messagePayload);
   });
@@ -607,7 +607,7 @@ describe('Robot', () => {
   it('should emit own_message, if message comes from itself', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -621,8 +621,8 @@ describe('Robot', () => {
       name: 'general'
     };
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(robot.bot);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(robot.bot);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
 
     robot.on('own_message', () => {
       done();
@@ -635,7 +635,7 @@ describe('Robot', () => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
     robot._ignoredChannels = ['#ignore-this-channel'];
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -653,8 +653,8 @@ describe('Robot', () => {
       name: 'ignore-this-channel'
     };
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
 
     robot.on('ignored_channel', () => {
       done();
@@ -668,7 +668,7 @@ describe('Robot', () => {
     // add ignored_channel to make sure this message is not ignored
     robot._ignoredChannels = ['#ignore-this-channel'];
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -687,8 +687,8 @@ describe('Robot', () => {
     };
     const listenerStub = sinon.stub(Listeners.prototype, 'find').returns(null);
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
 
     robot.on('no_listener_match', () => {
       listenerStub.restore();
@@ -701,7 +701,7 @@ describe('Robot', () => {
   it('should run all acls', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -731,8 +731,8 @@ describe('Robot', () => {
 
     const listenerStub = sinon.stub(Listeners.prototype, 'find').returns(listenerMock);
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
     aclStub1.callsArg(2);
     aclStub2.callsArg(2);
 
@@ -750,7 +750,7 @@ describe('Robot', () => {
   it('should emit request_handled if done successfully', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -778,8 +778,8 @@ describe('Robot', () => {
 
     const listenerStub = sinon.stub(Listeners.prototype, 'find').returns(listenerMock);
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
 
     robot.on('request_handled', () => {
       listenerMock.callback.should.be.calledOnce;
@@ -793,7 +793,7 @@ describe('Robot', () => {
   it('should emit task_error, if response failed to send', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -826,9 +826,9 @@ describe('Robot', () => {
 
     const errorMock = new Error('something happened');
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
-    postMessageMock.callsArgWith(3, errorMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    postMessageMock.callsArgWith(4, errorMock);
     listenerStub.returns(listenerMock);
 
     robot.on('response_failed', err => {
@@ -844,7 +844,7 @@ describe('Robot', () => {
   it('should emit error, if there is error in callback', done => {
     const robot = new Robot('token');
     robot.bot = { id: 'U834975', name: 'mockbot' };
-    robot._rtm.dataStore = {
+    robot._dataStore = {
       getUserById: sinon.stub(),
       getChannelGroupOrDMById: sinon.stub()
     };
@@ -876,8 +876,8 @@ describe('Robot', () => {
     const postMessageMock = sinon.stub(WebClient.prototype, 'apiCall');
     const listenerStub = sinon.stub(Listeners.prototype, 'find');
 
-    robot._rtm.dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
-    robot._rtm.dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
+    robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
+    robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
     listenerStub.returns(listenerMock);
     postMessageMock.callsArgWith(3, errorMock);
 
