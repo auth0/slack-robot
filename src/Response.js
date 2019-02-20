@@ -343,7 +343,11 @@ export default class Response extends EventEmitter {
    * @param {function} callback
    */
   _sendTextResponse(id, text, callback) {
-    this._api.chat.postMessage(id, text, DEFAUT_POST_MESSAGE_OPTS, (err, res) => {
+    const postMessageArguments = Object.assign({}, DEFAUT_POST_MESSAGE_OPTS, {
+      text,
+      channel: id
+    })
+    this._api.chat.postMessage(postMessageArguments, (err, res) => {
       if (err) {
         return callback(err);
       }
