@@ -2,10 +2,10 @@
  *
  */
 
-var forEach = require('lodash').forEach;
+const forEach = require('lodash').forEach;
 
 
-var handlerModules = [
+const handlerModules = [
   require('./bots'),
   require('./channels'),
   require('./groups'),

@@ -3,9 +3,9 @@
  */
 
 
-var setBaseChannelProperty = function setBaseChannelProperty(val, key) {
+const setBaseChannelProperty = function setBaseChannelProperty(val, key) {
   return function setBaseChannelPropertyWrapped(dataStore, message) {
-    var obj = dataStore.getChannelGroupOrDMById(message.channel);
+    const obj = dataStore.getChannelGroupOrDMById(message.channel);
     if (obj) {
       obj[key] = val;
     }
@@ -18,16 +18,15 @@ var setBaseChannelProperty = function setBaseChannelProperty(val, key) {
  * {@link https://api.slack.com/events/group_marked|group_marked}
  * {@link https://api.slack.com/events/im_marked|im_marked}
  */
-var handleChannelGroupOrDMMarked = function handleChannelGroupOrDMMarked(dataStore, message) {
-  var firstChar;
+const handleChannelGroupOrDMMarked = function handleChannelGroupOrDMMarked(dataStore, message) {
 
-  var baseChannel = dataStore.getChannelGroupOrDMById(message.channel);
+  const baseChannel = dataStore.getChannelGroupOrDMById(message.channel);
 
   if (baseChannel) {
     baseChannel.lastRead = message.ts;
     baseChannel.recalcUnreads();
 
-    firstChar = message.channel.substring(0, 1);
+    const firstChar = message.channel.substring(0, 1);
 
     if (firstChar === 'C') {
       dataStore.setChannel(baseChannel);
@@ -44,21 +43,21 @@ var handleChannelGroupOrDMMarked = function handleChannelGroupOrDMMarked(dataSto
  * {@link https://api.slack.com/events/channel_archive|channel_archive}
  * {@link https://api.slack.com/events/group_archive|group_archive}
  */
-var handleArchive = setBaseChannelProperty(true, 'is_archived');
+const handleArchive = setBaseChannelProperty(true, 'is_archived');
 
 
 /**
  * {@link https://api.slack.com/events/channel_unarchive|channel_unarchive}
  * {@link https://api.slack.com/events/group_unarchive|group_unarchive}
  */
-var handleUnarchive = setBaseChannelProperty(false, 'is_archived');
+const handleUnarchive = setBaseChannelProperty(false, 'is_archived');
 
 
 /**
  * {@link https://api.slack.com/events/group_rename|group_rename}
  * {@link https://api.slack.com/events/channel_rename|channel_rename}
  */
-var handleRename = function handleRename(dataStore, message) {
+const handleRename = function handleRename(dataStore, message) {
   dataStore.upsertChannelGroupOrDMById(message.channel.id, message.channel);
 };
 
@@ -67,16 +66,14 @@ var handleRename = function handleRename(dataStore, message) {
  * {@link https://api.slack.com/events/group_left|group_left}
  * {@link https://api.slack.com/events/channel_left|channel_left}
  */
-var handleLeave = function handleLeave(activeUserId, activeTeamId, dataStore, message) {
-  var index;
+const handleLeave = function handleLeave(activeUserId, activeTeamId, dataStore, message) {
 
-  var baseChannel = dataStore.getChannelGroupOrDMById(message.channel);
+  const baseChannel = dataStore.getChannelGroupOrDMById(message.channel);
   if (baseChannel) {
-    index = baseChannel.members.indexOf(activeUserId);
+    const index = baseChannel.members.indexOf(activeUserId);
     baseChannel.members.splice(index, 1);
   }
 };
-
 
 module.exports.handleChannelGroupOrDMMarked = handleChannelGroupOrDMMarked;
 module.exports.handleArchive = handleArchive;

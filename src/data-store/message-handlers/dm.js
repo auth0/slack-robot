@@ -2,22 +2,22 @@
  * Handlers for all RTM `im_` events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
-var baseChannelHandlers = require('./base-channel');
-var helpers = require('./helpers');
-var models = require('../../models');
+const baseChannelHandlers = require('./base-channel');
+const helpers = require('./helpers');
+const models = require('../../models');
 
 
 /** {@link https://api.slack.com/events/im_created|im_created} */
-var handleDMCreated = function handleDMCreated(dataStore, message) {
-  var dm = new models.DM(message.channel);
+const handleDMCreated = function handleDMCreated(dataStore, message) {
+  const dm = new models.DM(message.channel);
   dataStore.setDM(dm);
 };
 
 
-var changeDMOpenness = function changeDMOpenness(dataStore, message, isOpen) {
-  var dm = dataStore.getDMById(message.channel);
+const changeDMOpenness = function changeDMOpenness(dataStore, message, isOpen) {
+  const dm = dataStore.getDMById(message.channel);
 
   if (dm) {
     dm.is_open = isOpen;
@@ -27,18 +27,18 @@ var changeDMOpenness = function changeDMOpenness(dataStore, message, isOpen) {
 
 
 /** {@link https://api.slack.com/events/im_close|im_close} */
-var handleDMClose = function handleDMClose(dataStore, message) {
+const handleDMClose = function handleDMClose(dataStore, message) {
   return changeDMOpenness(dataStore, message, false);
 };
 
 
 /** {@link https://api.slack.com/events/im_open|im_open} */
-var handleDMOpen = function handleDMOpen(dataStore, message) {
+const handleDMOpen = function handleDMOpen(dataStore, message) {
   return changeDMOpenness(dataStore, message, true);
 };
 
 
-var handlers = [
+const handlers = [
   ['im_created', handleDMCreated],
   ['im_marked', baseChannelHandlers.handleChannelGroupOrDMMarked],
   ['im_open', handleDMOpen],

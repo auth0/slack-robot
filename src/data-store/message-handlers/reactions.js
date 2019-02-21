@@ -2,9 +2,9 @@
  * Handlers for all RTM `reaction_xxx` events.
  */
 
-var findIndex = require('lodash').findIndex;
-var partial = require('lodash').partial;
-var zipObject = require('lodash').zipObject;
+const findIndex = require('lodash').findIndex;
+const partial = require('lodash').partial;
+const zipObject = require('lodash').zipObject;
 
 
 /**
@@ -13,14 +13,11 @@ var zipObject = require('lodash').zipObject;
  * @param {Object} message
  * @param {boolean} isAdded
  */
-var toggleReactionForMessage = function toggleReactionForMessage(dataStore, message, isAdded) {
-  var reaction;
-  var reactionIndex;
-  var userIndex;
-  var item = message.item;
+const toggleReactionForMessage = function toggleReactionForMessage(dataStore, message, isAdded) {
+  const item = message.item;
 
-  var channel = dataStore.getChannelGroupOrDMById(item.channel);
-  var msgObj = channel.getMessageByTs(item.ts);
+  const channel = dataStore.getChannelGroupOrDMById(item.channel);
+  const msgObj = channel.getMessageByTs(item.ts);
 
   // Ensure a reactions array is available on the message object
   msgObj.reactions = msgObj.reactions || [];
@@ -28,8 +25,8 @@ var toggleReactionForMessage = function toggleReactionForMessage(dataStore, mess
   // If there's a message in the local cache, update it, otherwise do nothing as the message
   // with reaction will get populated when it's next needed from history.
   if (message) {
-    reactionIndex = findIndex(msgObj.reactions, { name: message.reaction });
-    reaction = msgObj.reactions[reactionIndex];
+    const reactionIndex = findIndex(msgObj.reactions, { name: message.reaction });
+    const reaction = msgObj.reactions[reactionIndex];
 
     if (reaction) {
       reaction.count = Math.max(reaction.count + (isAdded ? 1 : -1), 0);
@@ -44,7 +41,7 @@ var toggleReactionForMessage = function toggleReactionForMessage(dataStore, mess
         if (reaction.count === 0) {
           msgObj.reactions.splice(reactionIndex, 1);
         } else {
-          userIndex = reaction.users.indexOf(message.user);
+          const userIndex = reaction.users.indexOf(message.user);
           if (userIndex > -1) {
             reaction.users.splice(userIndex, 1);
           }
@@ -61,18 +58,18 @@ var toggleReactionForMessage = function toggleReactionForMessage(dataStore, mess
 };
 
 
-var toggleReactionForFile = function toggleReactionForFile() {
+const toggleReactionForFile = function toggleReactionForFile() {
   // TODO(leah): Update this once files are supported in the data-store implementation
 };
 
 
-var toggleReactionForFileComment = function toggleReactionForFileComment() {
+const toggleReactionForFileComment = function toggleReactionForFileComment() {
   // TODO(leah): Update this once files are supported in the data-store implementation
 };
 
 
-var toggleReaction = function toggleReaction(isAdded, dataStore, message) {
-  var itemType = message.item.type;
+const toggleReaction = function toggleReaction(isAdded, dataStore, message) {
+  const itemType = message.item.type;
 
   if (itemType === 'file') {
     toggleReactionForFile(dataStore, message, isAdded);
@@ -84,7 +81,7 @@ var toggleReaction = function toggleReaction(isAdded, dataStore, message) {
 };
 
 
-var handlers = [
+const handlers = [
   ['reaction_added', partial(toggleReaction, true)],
   ['reaction_removed', partial(toggleReaction, false)]
 ];

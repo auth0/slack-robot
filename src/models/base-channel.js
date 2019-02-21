@@ -2,15 +2,14 @@
  *
  */
 
-var bind = require('lodash').bind;
-var forEachRight = require('lodash').forEachRight;
-var find = require('lodash').find;
-var findLastIndex = require('lodash').findLastIndex;
-var inherits = require('inherits');
-var keys = require('lodash').keys;
+const bind = require('lodash').bind;
+const forEachRight = require('lodash').forEachRight;
+const find = require('lodash').find;
+const findLastIndex = require('lodash').findLastIndex;
+const inherits = require('inherits');
+const keys = require('lodash').keys;
 
-var Model = require('./model');
-
+const Model = require('./model');
 
 function BaseChannel(objectName, opts) {
   /**
@@ -31,7 +30,6 @@ function BaseChannel(objectName, opts) {
    */
   this.unreadCount = 0;
 
-
   /**
    * @type {string}
    */
@@ -48,13 +46,11 @@ function BaseChannel(objectName, opts) {
 
 inherits(BaseChannel, Model);
 
-
 /**
  * The timeout after which the user typing entry should be removed.
  * @type {number}
  */
 BaseChannel.prototype.USER_TYPING_TIMEOUT = 5000;
-
 
 BaseChannel.prototype._setProperties = function setProperties(opts) {
   BaseChannel.super_.prototype._setProperties.call(this, opts);
@@ -63,7 +59,6 @@ BaseChannel.prototype._setProperties = function setProperties(opts) {
     this.addMessage(this.latest);
   }
 };
-
 
 /**
  *
@@ -79,13 +74,12 @@ BaseChannel.prototype.startedTyping = function startedTyping(userId) {
   }, this), this.USER_TYPING_TIMEOUT);
 };
 
-
 /**
  *
  * @returns {number}
  */
 BaseChannel.prototype.recalcUnreads = function recalcUnreads() {
-  var continueIterating = true;
+  let continueIterating = true;
   this.unreadCount = 0;
 
   forEachRight(this.history, bind(function checkMessageIsUnread(message) {
@@ -101,7 +95,6 @@ BaseChannel.prototype.recalcUnreads = function recalcUnreads() {
   return this.unreadCount;
 };
 
-
 /**
  * Returns the string form of the channel type.
  * @return {string}
@@ -109,7 +102,6 @@ BaseChannel.prototype.recalcUnreads = function recalcUnreads() {
 BaseChannel.prototype.getType = function getType() {
   return this._modelName.toLowerCase();
 };
-
 
 /**
  * Returns an array of user ids for all users who are currently typing.
@@ -119,7 +111,6 @@ BaseChannel.prototype.getTypingUsers = function getTypingUsers() {
   return keys(this._typing);
 };
 
-
 /**
  *
  * @param ts
@@ -128,7 +119,6 @@ BaseChannel.prototype.getMessageByTs = function getMessageByTs(ts) {
   // This has the potential to get really slow, but ok for now I guess...
   return find(this.history, { ts: ts });
 };
-
 
 /**
  *
@@ -144,14 +134,12 @@ BaseChannel.prototype.addMessage = function addMessage(message) {
   }
 };
 
-
 BaseChannel.prototype.updateMessage = function updateMessage(messageUpdatedMsg) {
-  var message = messageUpdatedMsg.message;
-  var msgIndex = findLastIndex(this.history, 'ts', message.ts);
+  const message = messageUpdatedMsg.message;
+  const msgIndex = findLastIndex(this.history, 'ts', message.ts);
   if (msgIndex !== -1) {
     this.history[msgIndex] = message;
   }
 };
-
 
 module.exports = BaseChannel;

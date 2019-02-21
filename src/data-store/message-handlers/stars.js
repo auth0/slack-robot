@@ -2,12 +2,12 @@
  * Handlers for all RTM `star_` events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
-var helpers = require('./helpers');
+const helpers = require('./helpers');
 
 
-var handlers = [
+const handlers = [
   ['star_added', helpers.noopMessage],
   ['star_removed', helpers.noopMessage]
 ];

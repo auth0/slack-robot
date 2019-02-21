@@ -2,16 +2,14 @@
  *
  */
 
-var inherits = require('inherits');
+const inherits = require('inherits');
 
-var BaseChannel = require('./base-channel');
+const BaseChannel = require('./base-channel');
 
-
-var ChannelGroup = function ChannelGroup(name, opts) {
+const ChannelGroup = function ChannelGroup(name, opts) {
   BaseChannel.call(this, name, opts);
 };
 
 inherits(ChannelGroup, BaseChannel);
-
 
 module.exports = ChannelGroup;

@@ -2,16 +2,14 @@
  * {@link https://api.slack.com/types/channel|Channel}
  */
 
-var inherits = require('inherits');
+const inherits = require('inherits');
 
-var ChannelGroup = require('./channel-group');
+const ChannelGroup = require('./channel-group');
 
-
-var Channel = function Channel(opts) {
+const Channel = function Channel(opts) {
   ChannelGroup.call(this, 'Channel', opts);
 };
 
 inherits(Channel, ChannelGroup);
-
 
 module.exports = Channel;
