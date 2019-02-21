@@ -299,6 +299,11 @@ export default class Robot extends EventEmitter {
         this._dataStore.cacheRtmStart(data);
       }
       this.bot = this._dataStore.getUserById(this._rtm.activeUserId);
+      const dataStore = this._dataStore;
+      const rtmClient = this._rtm;
+      this._rtm.on('slack_event', (type, message) => {
+        dataStore.handleRtmMessage(rtmClient.activeUserId, rtmClient.activeTeamId, type, message);
+      });
       logger.info(`Logged in as ${this.bot.name}`);
     });
 

@@ -2,7 +2,7 @@
  * Handlers for all RTM `user_*` events.
  */
 
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 const helpers = require('./helpers');
 
@@ -30,4 +30,4 @@ const handlers = [
   ['user_change', helpers.handleNewOrUpdatedUser]
 ];
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);

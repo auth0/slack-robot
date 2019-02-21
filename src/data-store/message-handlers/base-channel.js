@@ -2,7 +2,6 @@
  * Event handlers that can be re-used between channels, groups and DMs
  */
 
-
 const setBaseChannelProperty = function setBaseChannelProperty(val, key) {
   return function setBaseChannelPropertyWrapped(dataStore, message) {
     const obj = dataStore.getChannelGroupOrDMById(message.channel);
@@ -11,8 +10,6 @@ const setBaseChannelProperty = function setBaseChannelProperty(val, key) {
     }
   };
 };
-
-
 /**
  * {@link https://api.slack.com/events/channel_marked|channel_marked}
  * {@link https://api.slack.com/events/group_marked|group_marked}
@@ -38,20 +35,17 @@ const handleChannelGroupOrDMMarked = function handleChannelGroupOrDMMarked(dataS
   }
 };
 
-
 /**
  * {@link https://api.slack.com/events/channel_archive|channel_archive}
  * {@link https://api.slack.com/events/group_archive|group_archive}
  */
 const handleArchive = setBaseChannelProperty(true, 'is_archived');
 
-
 /**
  * {@link https://api.slack.com/events/channel_unarchive|channel_unarchive}
  * {@link https://api.slack.com/events/group_unarchive|group_unarchive}
  */
 const handleUnarchive = setBaseChannelProperty(false, 'is_archived');
-
 
 /**
  * {@link https://api.slack.com/events/group_rename|group_rename}
@@ -60,7 +54,6 @@ const handleUnarchive = setBaseChannelProperty(false, 'is_archived');
 const handleRename = function handleRename(dataStore, message) {
   dataStore.upsertChannelGroupOrDMById(message.channel.id, message.channel);
 };
-
 
 /**
  * {@link https://api.slack.com/events/group_left|group_left}

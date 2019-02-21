@@ -3,7 +3,7 @@
  */
 
 const findIndex = require('lodash').findIndex;
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 const makeMessageEventWithSubtype = function makeMessageEventWithSubtype(subtype, delim) {
   return ['message', subtype].join(delim || '::');
@@ -75,4 +75,4 @@ const handlers = [
 ];
 
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);
