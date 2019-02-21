@@ -1,7 +1,7 @@
 /**
  * Handlers for all RTM `team_` events.
  */
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 const helpers = require('./helpers');
 
@@ -41,4 +41,4 @@ const handlers = [
 ];
 
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);

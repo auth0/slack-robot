@@ -4,7 +4,7 @@
 
 const findIndex = require('lodash').findIndex;
 const partial = require('lodash').partial;
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 /**
  *
@@ -84,4 +84,4 @@ const handlers = [
   ['reaction_removed', partial(toggleReaction, false)]
 ];
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);

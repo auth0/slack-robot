@@ -2,7 +2,7 @@
  * Event handlers for RTM presence change events.
  */
 
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 
 /** {@link https://api.slack.com/events/manual_presence_change|manual_presence_change} */
@@ -26,4 +26,4 @@ const handlers = [
 ];
 
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);

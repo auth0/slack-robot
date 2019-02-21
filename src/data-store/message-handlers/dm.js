@@ -2,7 +2,7 @@
  * Handlers for all RTM `im_` events.
  */
 
-const zipObject = require('lodash').zipObject;
+const fromPairs = require('lodash').fromPairs;
 
 const baseChannelHandlers = require('./base-channel');
 const helpers = require('./helpers');
@@ -47,4 +47,4 @@ const handlers = [
 ];
 
 
-module.exports = zipObject(handlers);
+module.exports = fromPairs(handlers);
