@@ -117,7 +117,7 @@ BaseChannel.prototype.getTypingUsers = function getTypingUsers() {
  */
 BaseChannel.prototype.getMessageByTs = function getMessageByTs(ts) {
   // This has the potential to get really slow, but ok for now I guess...
-  return find(this.history, { ts: ts });
+  return find(this.history, { ts });
 };
 
 /**

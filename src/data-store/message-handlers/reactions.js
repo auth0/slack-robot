@@ -6,7 +6,6 @@ const findIndex = require('lodash').findIndex;
 const partial = require('lodash').partial;
 const zipObject = require('lodash').zipObject;
 
-
 /**
  *
  * @param {Object} dataStore
@@ -80,11 +79,9 @@ const toggleReaction = function toggleReaction(isAdded, dataStore, message) {
   }
 };
 
-
 const handlers = [
   ['reaction_added', partial(toggleReaction, true)],
   ['reaction_removed', partial(toggleReaction, false)]
 ];
-
 
 module.exports = zipObject(handlers);

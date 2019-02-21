@@ -6,7 +6,6 @@ const zipObject = require('lodash').zipObject;
 
 const helpers = require('./helpers');
 
-
 /** {@link https://api.slack.com/events/user_typing|user_typing} */
 const handleUserTyping = function handleUserTyping(dataStore, message) {
   const user = dataStore.getUserById(message.user);
@@ -19,19 +18,16 @@ const handleUserTyping = function handleUserTyping(dataStore, message) {
   }
 };
 
-
 /** {@link https://api.slack.com/events/pref_change|pref_change} */
 const handlePrefChange = function handlePrefChange(activeUserId, activeTeamId, dataStore, message) {
   const user = dataStore.getUserById(activeUserId);
   user.prefs[message.name] = message.value;
 };
 
-
 const handlers = [
   ['pref_change', handlePrefChange],
   ['user_typing', handleUserTyping],
   ['user_change', helpers.handleNewOrUpdatedUser]
 ];
-
 
 module.exports = zipObject(handlers);
