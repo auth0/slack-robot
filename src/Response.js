@@ -366,10 +366,12 @@ export default class Response extends EventEmitter {
     const { text, attachments } = attachment;
     const opts = {
       ...DEFAUT_POST_MESSAGE_OPTS,
-      attachments: JSON.stringify(attachments)
+      attachments: JSON.stringify(attachments),
+      text,
+      channel: id
     };
 
-    this._api.chat.postMessage(id, text, opts, (err, res) => {
+    this._api.chat.postMessage(opts, (err, res) => {
       if (err) {
         return callback(err);
       }

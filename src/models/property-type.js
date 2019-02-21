@@ -1,4 +1,4 @@
-var PROPERTY_TYPES = {
+const PROPERTY_TYPES = {
   SIMPLE: 0,
   MODEL: 1,
   MODEL_ARRAY: 2

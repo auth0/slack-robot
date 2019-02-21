@@ -2,25 +2,25 @@
  * Event handlers for RTM presence change events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
 
 /** {@link https://api.slack.com/events/manual_presence_change|manual_presence_change} */
-var handleManualPresenceChange = function handleManualPresenceChange(
+const handleManualPresenceChange = function handleManualPresenceChange(
   activeUserId, activeTeamId, dataStore, message) {
-  var user = dataStore.getUserById(activeUserId);
+  const user = dataStore.getUserById(activeUserId);
   user.presence = message.presence;
 };
 
 
 /** {@link https://api.slack.com/events/presence_change|presence_change} */
-var handlePresenceChange = function handlePresenceChange(dataStore, message) {
-  var user = dataStore.getUserById(message.user);
+const handlePresenceChange = function handlePresenceChange(dataStore, message) {
+  const user = dataStore.getUserById(message.user);
   user.presence = message.presence;
 };
 
 
-var handlers = [
+const handlers = [
   ['manual_presence_change', handleManualPresenceChange],
   ['presence_change', handlePresenceChange]
 ];

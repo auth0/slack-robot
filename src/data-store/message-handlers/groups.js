@@ -2,16 +2,16 @@
  * Handlers for all RTM `group_` events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
-var baseChannelHandlers = require('./base-channel');
-var helpers = require('./helpers');
-var models = require('../../models');
+const baseChannelHandlers = require('./base-channel');
+const helpers = require('./helpers');
+const models = require('../../models');
 
 
 /** {@link https://api.slack.com/events/group_joined|group_joined} */
-var handleGroupJoined = function handleGroupJoined(dataStore, message) {
-  var group = new models.Group(message.channel);
+const handleGroupJoined = function handleGroupJoined(dataStore, message) {
+  const group = new models.Group(message.channel);
   dataStore.setGroup(group);
 };
 
@@ -19,11 +19,10 @@ var handleGroupJoined = function handleGroupJoined(dataStore, message) {
 /**
  * {@link https://api.slack.com/events/group_left|group_left}
  */
-var handleGroupLeave = function handleGroupLeave(activeUserId, activeTeamId, dataStore, message) {
-  var group;
+const handleGroupLeave = function handleGroupLeave(activeUserId, activeTeamId, dataStore, message) {
   baseChannelHandlers.handleLeave(activeUserId, activeTeamId, dataStore, message);
 
-  group = dataStore.getGroupById(message.channel);
+  const group = dataStore.getGroupById(message.channel);
   if (group) {
     // TODO(leah): Maybe this should remove the group?
     if (group.members.length === 0) {
@@ -34,7 +33,7 @@ var handleGroupLeave = function handleGroupLeave(activeUserId, activeTeamId, dat
 };
 
 
-var handlers = [
+const handlers = [
   ['group_archive', baseChannelHandlers.handleArchive],
   ['group_close', helpers.noopMessage],
   ['group_joined', handleGroupJoined],

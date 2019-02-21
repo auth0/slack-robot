@@ -2,22 +2,22 @@
  * Handlers for all RTM `bot_*` events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
 
 /** {@link https://api.slack.com/events/bot_added|bot_added} */
-var addBot = function addBot(dataStore, message) {
+const addBot = function addBot(dataStore, message) {
   dataStore.setBot(message.bot);
 };
 
 
 /** {@link https://api.slack.com/events/bot_changed|bot_changed} */
-var changedBot = function changedBot(dataStore, message) {
+const changedBot = function changedBot(dataStore, message) {
   dataStore.upsertBot(message.bot);
 };
 
 
-var handlers = [
+const handlers = [
   ['bot_added', addBot],
   ['bot_changed', changedBot]
 ];

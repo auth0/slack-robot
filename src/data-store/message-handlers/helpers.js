@@ -2,10 +2,10 @@
  *
  */
 
-var models = require('../../models');
+const models = require('../../models');
 
 
-var noopMessage = function noopMessage(dataStore, message) {
+const noopMessage = function noopMessage(dataStore, message) {
   return message;
 };
 
@@ -14,8 +14,8 @@ var noopMessage = function noopMessage(dataStore, message) {
  * {@link https://api.slack.com/events/team_join|team_join}
  * {@link https://api.slack.com/events/user_change|user_change}
  */
-var handleNewOrUpdatedUser = function handleNewOrUpdatedUser(dataStore, message) {
-  var user = dataStore.getUserById(message.user.id);
+const handleNewOrUpdatedUser = function handleNewOrUpdatedUser(dataStore, message) {
+  let user = dataStore.getUserById(message.user.id);
   if (user) {
     user.update(message.user);
   } else {

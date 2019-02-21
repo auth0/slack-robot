@@ -2,15 +2,15 @@
  * Handlers for all RTM `user_*` events.
  */
 
-var zipObject = require('lodash').zipObject;
+const zipObject = require('lodash').zipObject;
 
-var helpers = require('./helpers');
+const helpers = require('./helpers');
 
 
 /** {@link https://api.slack.com/events/user_typing|user_typing} */
-var handleUserTyping = function handleUserTyping(dataStore, message) {
-  var user = dataStore.getUserById(message.user);
-  var channel = dataStore.getChannelById(message.channel);
+const handleUserTyping = function handleUserTyping(dataStore, message) {
+  const user = dataStore.getUserById(message.user);
+  const channel = dataStore.getChannelById(message.channel);
 
   if (channel && user) {
     channel.startedTyping(user.id);
@@ -21,13 +21,13 @@ var handleUserTyping = function handleUserTyping(dataStore, message) {
 
 
 /** {@link https://api.slack.com/events/pref_change|pref_change} */
-var handlePrefChange = function handlePrefChange(activeUserId, activeTeamId, dataStore, message) {
-  var user = dataStore.getUserById(activeUserId);
+const handlePrefChange = function handlePrefChange(activeUserId, activeTeamId, dataStore, message) {
+  const user = dataStore.getUserById(activeUserId);
   user.prefs[message.name] = message.value;
 };
 
 
-var handlers = [
+const handlers = [
   ['pref_change', handlePrefChange],
   ['user_typing', handleUserTyping],
   ['user_change', helpers.handleNewOrUpdatedUser]

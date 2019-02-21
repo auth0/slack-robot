@@ -2,18 +2,17 @@
  *
  */
 
-var forEach = require('lodash').forEach;
-var bind = require('lodash').bind;
-var has = require('lodash').has;
-var isArray = require('lodash').isArray;
-var isEmpty = require('lodash').isEmpty;
-var isObject = require('lodash').isObject;
-var map = require('lodash').map;
-var mapValues = require('lodash').mapValues;
+const forEach = require('lodash').forEach;
+const bind = require('lodash').bind;
+const has = require('lodash').has;
+const isArray = require('lodash').isArray;
+const isEmpty = require('lodash').isEmpty;
+const isObject = require('lodash').isObject;
+const map = require('lodash').map;
+const mapValues = require('lodash').mapValues;
 
-var PROPERTY_TYPES = require('./property-type');
-var helpers = require('./helpers');
-
+const PROPERTY_TYPES = require('./property-type');
+const helpers = require('./helpers');
 
 function Model(name, opts) {
   /**
@@ -33,7 +32,6 @@ function Model(name, opts) {
   this._setProperties(isEmpty(opts) ? {} : opts);
 }
 
-
 /**
  * Updates the model.
  * @param {Object} opts
@@ -43,7 +41,6 @@ Model.prototype.update = function update(opts) {
   this._setProperties(opts);
   return this;
 };
-
 
 /**
  * Assigns all properties from the supplied opts object to the model.
@@ -57,7 +54,6 @@ Model.prototype.update = function update(opts) {
 Model.prototype._setProperties = function setProperties(opts) {
   forEach(opts, bind(this._setModelProperty, this));
 };
-
 
 /**
  * Assigns an individual property from a Slack API response to a model object.
@@ -88,7 +84,6 @@ Model.prototype._setModelProperty = function _setModelProperty(val, key) {
   }
 };
 
-
 /**
  * Sets an object property from the API on a model object.
  *
@@ -101,14 +96,13 @@ Model.prototype._setModelProperty = function _setModelProperty(val, key) {
  * @private
  */
 Model.prototype._setObjectProperty = function _setObjectProperty(key, val) {
-  var hasProperty = has(this, key);
-  var ModelClass;
+  const hasProperty = has(this, key);
 
   if (helpers.isModelObj(val)) {
     if (hasProperty) {
       this[key].update(val);
     } else {
-      ModelClass = helpers.getModelClass();
+      const ModelClass = helpers.getModelClass();
       this[key] = new ModelClass(val);
     }
     this._properties[key] = PROPERTY_TYPES.MODEL;
@@ -118,7 +112,6 @@ Model.prototype._setObjectProperty = function _setObjectProperty(key, val) {
   }
 };
 
-
 /**
  *
  * @param key
@@ -127,17 +120,17 @@ Model.prototype._setObjectProperty = function _setObjectProperty(key, val) {
  * @private
  */
 Model.prototype._setArrayProperty = function _setArrayProperty(key, val) {
-  var ModelClass;
-  var firstItem;
-
   // NOTE: This assumes that it's not necessary to search and update model values in arrays and
   //       that instead they can be over-written
-  if (!isEmpty(val)) {
+  if (isEmpty(val)) {
     // Assumes that all values in the array are of the same type
-    firstItem = val[0];
+    this._properties[key] = PROPERTY_TYPES.SIMPLE;
+    this[key] = val;
+  } else {
+    const firstItem = val[0];
     if (helpers.isModelObj(firstItem)) {
-      ModelClass = helpers.getModelClass();
-      this[key] = map(val, function makeChildModelObjs(item) {
+      const ModelClass = helpers.getModelClass();
+      this[key] = map(val, item => {
         return new ModelClass(item);
       });
       this._properties[key] = PROPERTY_TYPES.MODEL_ARRAY;
@@ -145,21 +138,17 @@ Model.prototype._setArrayProperty = function _setArrayProperty(key, val) {
       this._properties[key] = PROPERTY_TYPES.SIMPLE;
       this[key] = val;
     }
-  } else {
-    this._properties[key] = PROPERTY_TYPES.SIMPLE;
-    this[key] = val;
   }
 };
 
-
 Model.prototype.toJSON = function toJSON() {
-  var objRepresentation = mapValues(this._properties, bind(function mapModelPropertiesToJSON(val, key) {
-    var res;
+  const objRepresentation = mapValues(this._properties, bind((val, key) => {
+    let res;
 
     if (val === PROPERTY_TYPES.MODEL) {
       res = this[key].toJSON();
     } else if (val === PROPERTY_TYPES.MODEL_ARRAY) {
-      res = map(this[key], function mapModelArrayPropertyToJSON(arrVal) {
+      res = map(this[key], arrVal => {
         return arrVal.toJSON();
       });
     } else {
@@ -171,6 +160,5 @@ Model.prototype.toJSON = function toJSON() {
 
   return objRepresentation;
 };
-
 
 module.exports = Model;

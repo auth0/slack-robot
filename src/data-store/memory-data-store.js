@@ -2,14 +2,13 @@
  * In memory data store for caching information from the Slack API.
  */
 
-var assign = require('lodash').assign;
-var find = require('lodash').find;
-var has = require('lodash').has;
-var inherits = require('inherits');
+const assign = require('lodash').assign;
+const find = require('lodash').find;
+const has = require('lodash').has;
+const inherits = require('inherits');
 
-var SlackDataStore = require('./data-store');
-var models = require('../models');
-
+const SlackDataStore = require('./data-store');
+const models = require('../models');
 
 /**
  *
@@ -17,13 +16,11 @@ var models = require('../models');
  */
 function SlackMemoryDataStore(opts) {
   SlackDataStore.call(this, opts);
-
   /**
    *
    * @type {Object}
    */
   this.users = {};
-
 
   /**
    *
@@ -31,13 +28,11 @@ function SlackMemoryDataStore(opts) {
    */
   this.channels = {};
 
-
   /**
    *
    * @type {Object}
    */
   this.dms = {};
-
 
   /**
    *
@@ -45,13 +40,11 @@ function SlackMemoryDataStore(opts) {
    */
   this.groups = {};
 
-
   /**
    *
    * @type {Object}
    */
   this.bots = {};
-
 
   /**
    *
@@ -61,7 +54,6 @@ function SlackMemoryDataStore(opts) {
 }
 
 inherits(SlackMemoryDataStore, SlackDataStore);
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.clear = function clear() {
@@ -73,150 +65,125 @@ SlackMemoryDataStore.prototype.clear = function clear() {
   this.teams = {};
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getUserById = function getUserById(userId) {
   return this.users[userId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getUserByName = function getUserByName(name) {
-  return find(this.users, {name: name});
+  return find(this.users, { name });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getUserByEmail = function getUserByEmail(email) {
-  return find(this.users, { profile: { email: email } });
+  return find(this.users, { profile: { email } });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getUserByBotId = function getUserByBotId(botId) {
   return find(this.users, { profile: { bot_id: botId } });
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getChannelById = function getChannelById(channelId) {
   return this.channels[channelId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getChannelByName = function getChannelByName(name) {
-  var transformedName = name.replace(/^#/, '');
-  return find(this.channels, {'name':  transformedName});
+  const transformedName = name.replace(/^#/, '');
+  return find(this.channels, { name: transformedName });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getGroupById = function getGroupById(groupId) {
   return this.groups[groupId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getGroupByName = function getGroupByName(name) {
-  return find(this.groups, {name: name});
+  return find(this.groups, { name });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getDMById = function getDMById(dmId) {
   return this.dms[dmId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getDMByName = function getDMByName(name) {
-  var user = this.getUserByName(name);
-  return find(this.dms, {user: user.id});
+  const user = this.getUserByName(name);
+  return find(this.dms, { user: user.id });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getBotById = function getBotById(botId) {
   return this.bots[botId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getBotByName = function getBotByName(name) {
-  return find(this.bots, {name: name});
+  return find(this.bots, { name });
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getBotByUserId = function getBotByUserId(userId) {
-  var bot;
-  var user = this.getUserById(userId);
+  let bot;
+  const user = this.getUserById(userId);
   if (user) {
     bot = this.getBotById(user.profile.bot_id);
   }
 
   return bot;
 };
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.getTeamById = function getTeamById(teamId) {
   return this.teams[teamId];
 };
-
-
 /**
  * Returns the unread count for all objects: channels, groups etc.
  */
 SlackMemoryDataStore.prototype.getUnreadCount = function getUnreadCount() {
 };
 
-
 // ###############################################
 // Setters
 // ###############################################
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setChannel = function setChannel(channel) {
   this.channels[channel.id] = channel;
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setGroup = function setGroup(group) {
   this.groups[group.id] = group;
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setDM = function setDM(dm) {
   this.dms[dm.id] = dm;
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setUser = function setUser(user) {
   this.users[user.id] = user;
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setBot = function setBot(bot) {
   this.bots[bot.id] = bot;
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.setTeam = function setTeam(team) {
   this.teams[team.id] = team;
 };
 
-
 // ###############################################
 // Upserts
 // ###############################################
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertChannel = function upsertChannel(channel) {
@@ -227,7 +194,6 @@ SlackMemoryDataStore.prototype.upsertChannel = function upsertChannel(channel) {
   }
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertGroup = function upsertGroup(group) {
   if (has(this.groups, group.id)) {
@@ -236,7 +202,6 @@ SlackMemoryDataStore.prototype.upsertGroup = function upsertGroup(group) {
     this.setGroup(new models.Group(group));
   }
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertDM = function upsertDM(dm) {
@@ -247,7 +212,6 @@ SlackMemoryDataStore.prototype.upsertDM = function upsertDM(dm) {
   }
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertUser = function upsertUser(user) {
   if (has(this.users, user.id)) {
@@ -257,72 +221,58 @@ SlackMemoryDataStore.prototype.upsertUser = function upsertUser(user) {
   }
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertBot = function upsertBot(bot) {
-  var currentBot;
-
   if (has(this.bots, bot.id)) {
-    currentBot = this.getBotById(bot.id);
+    const currentBot = this.getBotById(bot.id);
     this.setBot(assign(currentBot, bot));
   } else {
     this.setBot(bot);
   }
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.upsertTeam = function upsertTeam(team) {
-  var currentTeam;
-
   if (has(this.teams, team.id)) {
-    currentTeam = this.getTeamById(team.id);
+    const currentTeam = this.getTeamById(team.id);
     this.setTeam(assign(currentTeam, team));
   } else {
     this.setTeam(team);
   }
 };
 
-
 // ###############################################
 // Deletion methods
 // ###############################################
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeChannel = function removeChannel(channelId) {
   delete this.channels[channelId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeGroup = function removeGroup(groupId) {
   delete this.groups[groupId];
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeDM = function removeDM(dmId) {
   delete this.dms[dmId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeUser = function removeUser(userId) {
   delete this.users[userId];
 };
-
 
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeBot = function removeBot(botId) {
   delete this.bots[botId];
 };
 
-
 /** @inheritdoc */
 SlackMemoryDataStore.prototype.removeTeam = function removeTeam(teamId) {
   delete this.teams[teamId];
 };
-
 
 module.exports = SlackMemoryDataStore;
