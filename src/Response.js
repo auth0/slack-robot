@@ -278,33 +278,31 @@ export default class Response extends EventEmitter {
     if (task.target.indexOf(USER_PREFIX) > -1) {
       const userId = task.target.replace(USER_PREFIX, '');
 
-      return this._api.im.open({user: userId}, (err, data) => {
-        if (err) {
+      return this._api.im.open({user: userId})
+        .then((data) => {
+          if (!data.ok) {
+            return callback(new Error(data.error));
+          }
+          task.target = data.channel.id;
+          return this._sendResponse(task, callback);  
+        })
+        .catch((err) => {
           return callback(err);
-        }
-
-        if (!data.ok) {
-          return callback(new Error(data.error));
-        }
-
-        task.target = data.channel.id;
-        this._sendResponse(task, callback);
-      });
+        });
     } else if (task.target.indexOf(MPIM_PREFIX) > -1) {
       const userIds = task.target.replace(MPIM_PREFIX, '');
-
-      return this._api.mpim.open(userIds, (err, data) => {
-        if (err) {
+      return this._api.mpim.open(userIds)
+        .then((data) => {
+          if (!data.ok) {
+            return callback(new Error(data.error));
+          }
+  
+          task.target = data.group.id;
+          return this._sendResponse(task, callback);  
+        })
+        .catch((err) => {
           return callback(err);
-        }
-
-        if (!data.ok) {
-          return callback(new Error(data.error));
-        }
-
-        task.target = data.group.id;
-        this._sendResponse(task, callback);
-      });
+        });
     }
 
     this._sendResponse(task, callback);
@@ -347,13 +345,11 @@ export default class Response extends EventEmitter {
       text,
       channel: id
     })
-    this._api.chat.postMessage(postMessageArguments, (err, res) => {
-      if (err) {
-        return callback(err);
-      }
-
-      callback(null, res);
-    });
+    this._api.chat.postMessage(postMessageArguments)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => callback(err));
   }
 
   /**
@@ -371,13 +367,11 @@ export default class Response extends EventEmitter {
       channel: id
     };
 
-    this._api.chat.postMessage(opts, (err, res) => {
-      if (err) {
-        return callback(err);
-      }
-
-      callback(null, res);
-    });
+    this._api.chat.postMessage(opts)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => callback(err));
   }
 
   /**
