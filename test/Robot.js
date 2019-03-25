@@ -828,7 +828,7 @@ describe('Robot', () => {
 
     robot._dataStore.getUserById.withArgs(messagePayload.user).returns(userMock);
     robot._dataStore.getChannelGroupOrDMById.withArgs(messagePayload.channel).returns(channelMock);
-    postMessageMock.callsArgWith(2, errorMock);
+    postMessageMock.returns(Promise.reject(errorMock));
     listenerStub.returns(listenerMock);
 
     robot.on('response_failed', err => {

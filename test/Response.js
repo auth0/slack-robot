@@ -300,7 +300,7 @@ describe('Response', () => {
     const res = new Response(token, dataStoreMock, requestMock, 5);
 
     res._api = apiMock;
-    apiMock.chat.postMessage.callsArgWith(1, null, {});
+    apiMock.chat.postMessage.returns(Promise.resolve({}));
     apiMock.reactions.add.callsArgWith(2, null, {});
 
     res.text('hello');
@@ -326,8 +326,8 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.callsArgWith(1, null, dmOpenApiMock);
-    apiMock.chat.postMessage.callsArgWith(1, null, {});
+    apiMock.im.open.returns(Promise.resolve(dmOpenApiMock));
+    apiMock.chat.postMessage.returns(Promise.resolve({}));
 
     res.text('try dm', '@daendels').send().then(() => {
       const fixedTask = {
@@ -358,8 +358,8 @@ describe('Response', () => {
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
     dataStoreMock.getDMById.withArgs('D123124').returns({ user: 'U124523' });
-    apiMock.mpim.open.callsArgWith(1, null, mpimOpenApiMock);
-    apiMock.chat.postMessage.callsArgWith(1, null, {});
+    apiMock.mpim.open.returns(Promise.resolve(mpimOpenApiMock));
+    apiMock.chat.postMessage.returns(Promise.resolve({}));
 
     res.text('try mpim', [
       '@daendels',
@@ -392,7 +392,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.callsArgWith(1, dmOpenApiMock);
+    apiMock.im.open.returns(Promise.reject(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.should.be.equal(dmOpenApiMock);
@@ -412,7 +412,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.callsArgWith(1, null, dmOpenApiMock);
+    apiMock.im.open.returns(Promise.resolve(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.message.should.be.equal(errorMessage);
@@ -428,7 +428,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.mpim.open.callsArgWith(1, dmOpenApiMock);
+    apiMock.mpim.open.returns(Promise.reject(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.should.be.equal(dmOpenApiMock);
@@ -448,7 +448,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.mpim.open.callsArgWith(1, null, dmOpenApiMock);
+    apiMock.mpim.open.returns(Promise.resolve(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.message.should.be.equal(errorMessage);
@@ -463,7 +463,7 @@ describe('Response', () => {
     const errorMock = new Error('failed to post message');
 
     res._api = apiMock;
-    apiMock.chat.postMessage.callsArgWith(1, errorMock);
+    apiMock.chat.postMessage.returns(Promise.reject(errorMock));
 
     res.on('task_error', err => {
       err.should.be.equal(errorMock);
@@ -480,7 +480,7 @@ describe('Response', () => {
     const errorMock = new Error('failed to post attachment');
 
     res._api = apiMock;
-    apiMock.chat.postMessage.callsArgWith(1, errorMock);
+    apiMock.chat.postMessage.returns(Promise.reject(errorMock));
 
     res.on('task_error', err => {
       err.should.be.equal(errorMock);
@@ -610,7 +610,7 @@ describe('Response', () => {
       }, 0);
     })
     .then(() => {
-      apiMock.chat.postMessage.callsArgWith(1, null, {});
+      apiMock.chat.postMessage.returns(Promise.resolve({}));
 
       res._queue.paused.should.be.equal(true);
       res._queue.length().should.be.equal(2);
