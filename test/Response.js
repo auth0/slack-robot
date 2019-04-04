@@ -301,7 +301,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     apiMock.chat.postMessage.returns(Promise.resolve({}));
-    apiMock.reactions.add.callsArgWith(2, null, {});
+    apiMock.reactions.add.returns(Promise.resolve({}));
 
     res.text('hello');
     res.attachment([{}], 'C124542');
@@ -497,7 +497,7 @@ describe('Response', () => {
     const errorMock = new Error('failed to add reaction');
 
     res._api = apiMock;
-    apiMock.reactions.add.callsArgWith(2, errorMock);
+    apiMock.reactions.add.returns(Promise.reject(errorMock));
 
     res.on('task_error', err => {
       err.should.be.equal(errorMock);

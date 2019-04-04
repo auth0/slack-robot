@@ -382,16 +382,15 @@ export default class Response extends EventEmitter {
   _sendReactionResponse(reaction, callback) {
     const opts = {
       channel: reaction.channel,
-      timestamp: reaction.timestamp
+      timestamp: reaction.timestamp,
+      name: reaction.emoji
     };
 
-    this._api.reactions.add(reaction.emoji, opts, (err, res) => {
-      if (err) {
-        return callback(err);
-      }
-
-      callback(null, res);
-    });
+    this._api.reactions.add(opts)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => callback(err));
   }
 
   /**
