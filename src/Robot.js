@@ -343,12 +343,15 @@ export default class Robot extends EventEmitter {
       this._api.reactions.get({
         channel: message.item.channel,
         timestamp: message.item.ts
-      }, (err, res) => {
-        if (err || !res.ok || res.message.user !== this.bot.id) {
+      })
+      .then((res) => {
+        if (!res.ok || res.message.user !== this.bot.id) {
           return;
         }
-
         this._onMessage(message);
+      })
+      .catch((err) => {
+        return;
       });
     });
 

@@ -370,25 +370,29 @@ describe('Robot', () => {
     };
 
     robot.bot = { id: 'bot-id' };
-    robot._api.reactions.get = sinon.stub().withArgs({
-      channel: 'C341912',
-      timestamp: '12524123.000234'
-    }).callsArgWith(1, null, {
+    const getReactionsPromise = Promise.resolve({
       ok: true,
       message: {
         user: 'bot-id'
       }
     });
+    robot._api.reactions.get = sinon.stub().withArgs({
+      channel: 'C341912',
+      timestamp: '12524123.000234'
+    }).returns(getReactionsPromise);
     wsMessageStub.withArgs('reaction_added').callsArgWith(1, reactionDataMock);
 
     // start to listen
     robot.start();
-    messageHandlerStub.should.be.calledWithExactly(reactionDataMock);
 
-    // cleanup
-    wsStartStub.restore();
-    wsMessageStub.restore();
-    messageHandlerStub.restore();
+    getReactionsPromise.then(() => {
+      messageHandlerStub.should.be.calledWithExactly(reactionDataMock);
+
+      // cleanup
+      wsStartStub.restore();
+      wsMessageStub.restore();
+      messageHandlerStub.restore();  
+    })
   });
 
   it('should only listen reaction_added event in bot own message', () => {
@@ -408,25 +412,28 @@ describe('Robot', () => {
     };
 
     robot.bot = { id: 'bot-id' };
-    robot._api.reactions.get = sinon.stub().withArgs({
-      channel: 'C341912',
-      timestamp: '12524123.000234'
-    }).callsArgWith(1, null, {
+    const getReactionsPromise = Promise.resolve({
       ok: true,
       message: {
         user: 'not-from-bot'
       }
-    });
+    })
+    robot._api.reactions.get = sinon.stub().withArgs({
+      channel: 'C341912',
+      timestamp: '12524123.000234'
+    }).returns(getReactionsPromise);
     wsMessageStub.withArgs('reaction_added').callsArgWith(1, reactionDataMock);
 
     // start to listen
     robot.start();
-    messageHandlerStub.should.notCalled;
+    getReactionsPromise.then(() => {
+      messageHandlerStub.should.notCalled;
 
-    // cleanup
-    wsStartStub.restore();
-    wsMessageStub.restore();
-    messageHandlerStub.restore();
+      // cleanup
+      wsStartStub.restore();
+      wsMessageStub.restore();
+      messageHandlerStub.restore();  
+    })
   });
 
   it('should queue reaction_added event in file', () => {

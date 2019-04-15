@@ -16,7 +16,7 @@ const toggleReactionForMessage = function toggleReactionForMessage(dataStore, me
   const item = message.item;
 
   const channel = dataStore.getChannelGroupOrDMById(item.channel);
-  const msgObj = channel.getMessageByTs(item.ts);
+  const msgObj = channel.getMessageByTs(item.ts) || {};
 
   // Ensure a reactions array is available on the message object
   msgObj.reactions = msgObj.reactions || [];
