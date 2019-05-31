@@ -31,7 +31,7 @@ export default class Request {
     }
 
     if (message.type === 'message') {
-      var text = message.subtype === 'file_share' ? message.file.title : message.value.text;
+      var text = message.value.text;
       params = getParams(text, listener.value, listener.matcher);
 
       // do not fill matches when params exist
