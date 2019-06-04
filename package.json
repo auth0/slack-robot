@@ -66,6 +66,7 @@
     "async": "^1.5.2",
     "bluebird": "^2.9.34",
     "eventemitter3": "^1.1.1",
+    "inherits": "^2.0.3",
     "lodash": "^4.0.0",
     "log": "^1.4.0",
     "node-uuid": "^1.4.7",
