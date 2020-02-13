@@ -7,7 +7,8 @@ import Robot from '../src/Robot';
 import Listeners from '../src/Listeners';
 import Response from '../src/Response';
 import Log from 'log';
-import { RTMClient, WebClient } from '@slack/client';
+import { WebClient } from '@slack/web-api';
+import { RTMClient } from '@slack/rtm-api';
 // import Chat from '@slack/client/lib/clients/web/facets/chat';
 import plugins from '../src/plugins';
 
@@ -42,7 +43,7 @@ describe('Robot', () => {
   it('should be able to listen to text message', () => {
     const robot = new Robot('token');
     const addListenerStub = sinon.stub(Listeners.prototype, 'add');
-    const callback = function () {};
+    const callback = function () { };
 
     robot.listen('hello adele', callback);
     addListenerStub.calledWithExactly('message', 'hello adele', callback).should.be.equal(true);
@@ -52,7 +53,7 @@ describe('Robot', () => {
   it('should be able to listen to any message type', () => {
     const robot = new Robot('token');
     const addListenerStub = sinon.stub(Listeners.prototype, 'add');
-    const callback = function () {};
+    const callback = function () { };
 
     robot.when('reaction_type', '+1', callback);
     addListenerStub.calledWithExactly('reaction_type', '+1', callback).should.be.equal(true);
@@ -77,7 +78,7 @@ describe('Robot', () => {
 
   it('should throw on invalid listener', () => {
     const robot = new Robot('token');
-    const callback = function () {};
+    const callback = function () { };
     const wrongType = function () {
       robot.when(null, 'value', callback);
     };
@@ -236,7 +237,7 @@ describe('Robot', () => {
         return res.reaction('+1');
       };
       const invalidAsync = function () {
-        return res.async(() => {});
+        return res.async(() => { });
       };
 
       invalidReaction.should.throw('Cannot use method .reaction() in robot.to()');

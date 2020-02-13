@@ -28,8 +28,8 @@ export default function helpGenerator(opts) {
         const helpText = generateHelp(robot.getAllListeners());
         return res.upload(FILENAME, helpText).send();
       })
-      .desc(COMMAND_DESCRIPTION)
-      .acl(robot.acls.dynamicMention);
+        .desc(COMMAND_DESCRIPTION)
+        .acl(robot.acls.dynamicMention);
     } else if (helpListener) {
       robot.removeListener(helpListener.id);
     }

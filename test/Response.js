@@ -42,9 +42,15 @@ const requestMock = {
 };
 
 describe('Response', () => {
+
+  beforeEach(() => {
+    nock.cleanAll();
+  });
+
   it('should initialize correct value', () => {
     const res = new Response(token, dataStoreMock, requestMock);
-    res._api._accessToken.should.be.equal(token);
+    res._api.token.should.be.equal(token);
+
     // res._api._requestQueue.concurrency.should.be.equal(1);
     res._queue.concurrency.should.be.equal(1);
   });
@@ -338,10 +344,10 @@ describe('Response', () => {
 
       spy.calledWith(fixedTask).should.be.equal(true);
     })
-    .finally(() => {
-      spy.restore();
-      done();
-    });
+      .finally(() => {
+        spy.restore();
+        done();
+      });
   });
 
   it('should open mpim first when sending to multi-party direct message', done => {
@@ -380,10 +386,10 @@ describe('Response', () => {
       spy.calledWith(fixedTask).should.be.equal(true);
       apiMock.mpim.open.should.be.calledWith('U532122,U41452,U124523');
     })
-    .finally(() => {
-      spy.restore();
-      done();
-    });
+      .finally(() => {
+        spy.restore();
+        done();
+      });
   });
 
   it('should emit error when failed to open dm (network error)', done => {
@@ -399,7 +405,7 @@ describe('Response', () => {
       done();
     });
 
-    res.text('try dm', '@daendels').send();
+    res.text('try dm', '@daendels').send().catch(e => e);
   });
 
   it('should emit error when failed to open dm (failed api)', done => {
@@ -532,15 +538,15 @@ describe('Response', () => {
     const res = new Response(token, dataStoreMock, requestMock);
 
     nock('https://slack.com')
-    .post('/api/files.upload')
-    .reply(200, (uri, body) => {
-      (body.indexOf('Content-Disposition: form-data; name="file"') === -1).should.be.equal(true);
-      (body.indexOf('Content-Disposition: form-data; name="content"') > -1).should.be.equal(true);
-      return {
-        ok: true,
-        id: 'F306471'
-      };
-    });
+      .post('/api/files.upload')
+      .reply(200, (uri, body) => {
+        (body.indexOf('Content-Disposition: form-data; name="file"') === -1).should.be.equal(true);
+        (body.indexOf('Content-Disposition: form-data; name="content"') > -1).should.be.equal(true);
+        return {
+          ok: true,
+          id: 'F306471'
+        };
+      });
 
     res.upload('snippet.txt', 'xxxx').send().then(() => {
       done();
@@ -552,8 +558,8 @@ describe('Response', () => {
     const errorMessage = 'Some network error';
 
     nock('https://slack.com')
-    .post('/api/files.upload')
-    .replyWithError(errorMessage);
+      .post('/api/files.upload')
+      .replyWithError(errorMessage);
 
     res.upload('snippet.txt', 'xxxx').send();
 
@@ -568,11 +574,11 @@ describe('Response', () => {
     const errorMessage = 'not_authed';
 
     nock('https://slack.com')
-    .post('/api/files.upload')
-    .reply(200, {
-      ok: false,
-      error: errorMessage
-    });
+      .post('/api/files.upload')
+      .reply(200, {
+        ok: false,
+        error: errorMessage
+      });
 
     res.upload('snippet.txt', 'xxxx').send();
 
@@ -586,13 +592,13 @@ describe('Response', () => {
     const res = new Response(token, dataStoreMock, requestMock);
 
     nock('https://slack.com')
-    .post('/api/files.upload')
-    .reply((uri, body) => {
-      // HACK sending png gives us binary, we can't check Content-Disposition header
-      // TODO find a way to check when the "file" field is sent
-      (body.indexOf('Content-Disposition: form-data; name="content"') === -1).should.be.equal(true);
-      done();
-    });
+      .post('/api/files.upload')
+      .reply((uri, body) => {
+        // HACK sending png gives us binary, we can't check Content-Disposition header
+        // TODO find a way to check when the "file" field is sent
+        (body.indexOf('Content-Disposition: form-data; name="content"') === -1).should.be.equal(true);
+        done();
+      });
 
     res.upload('Response.js', fs.createReadStream('test/fixtures/img.png')).send();
   });
@@ -609,18 +615,18 @@ describe('Response', () => {
         end();
       }, 0);
     })
-    .then(() => {
-      apiMock.chat.postMessage.returns(Promise.resolve({}));
+      .then(() => {
+        apiMock.chat.postMessage.returns(Promise.resolve({}));
 
-      res._queue.paused.should.be.equal(true);
-      res._queue.length().should.be.equal(2);
-      return res.send();
-    })
-    .then(() => {
-      // all queues should be flushed already
-      res._queue.length().should.be.equal(0);
-      done();
-    });
+        res._queue.paused.should.be.equal(true);
+        res._queue.length().should.be.equal(2);
+        return res.send();
+      })
+      .then(() => {
+        // all queues should be flushed already
+        res._queue.length().should.be.equal(0);
+        done();
+      });
   });
 
   it('should give shortcut to end response for async wrapper', done => {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "marlint src/**/*.js",
-    "unit": "mocha --compilers js:babel-core/register \"test/**/*.js\"",
+    "unit": "mocha --require babel-core/register \"test/**/*.js\"",
     "unit:all": "npm run unit",
     "test": "npm run lint && npm run unit:all",
     "coverage": "nyc npm run unit:all && nyc report --reporter=html",
@@ -23,7 +23,13 @@
       "tests/*.js"
     ],
     "rules": {
-      "no-fallthrough": 0
+      "no-fallthrough": 0,
+      "comma-dangle": 0,
+      "func-style": 0,
+      "no-empty-function": 0,
+      "consistent-this": 0,
+      "max-len": 0,
+      "arrow-body-style": 0
     }
   },
   "babel": {
@@ -47,29 +53,30 @@
   },
   "homepage": "https://github.com/traveloka/slack-robot#readme",
   "devDependencies": {
-    "babel-cli": "^6.4.0",
-    "babel-core": "^6.4.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-2": "^6.3.13",
     "chai": "^3.2.0",
     "chai-as-promised": "^5.1.0",
-    "codecov": "^1.0.1",
-    "marlint": "^1.1.0",
-    "mocha": "^2.2.5",
-    "nock": "^5.2.1",
-    "nyc": "^5.3.0",
+    "codecov": "^3.6.5",
+    "marlint": "^4.2.0",
+    "mocha": "^7.0.1",
+    "nock": "^11.9.0",
+    "nyc": "^15.0.0",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "@slack/client": "^4.9.0",
+    "@slack/rtm-api": "^5.0.3",
+    "@slack/web-api": "^5.7.0",
     "async": "^1.5.2",
+    "axios": "^0.19.2",
     "bluebird": "^2.9.34",
     "eventemitter3": "^1.1.1",
     "inherits": "^2.0.3",
-    "lodash": "^4.0.0",
+    "lodash": "^4.17.15",
     "log": "^1.4.0",
-    "node-uuid": "^1.4.7",
-    "request": "^2.67.0"
+    "node-uuid": "^1.4.7"
   }
 }

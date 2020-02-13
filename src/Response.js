@@ -1,10 +1,12 @@
 import { bind } from 'lodash';
 import async from 'async';
 import fs from 'fs';
-import request from 'request';
+import axios from 'axios';
 import Promise from 'bluebird';
 import EventEmitter from 'eventemitter3';
-import { WebClient } from '@slack/client';
+import { WebClient } from '@slack/web-api';
+import querystring from 'querystring';
+
 import {
   RESPONSE_EVENTS
 } from './Events';
@@ -278,13 +280,13 @@ export default class Response extends EventEmitter {
     if (task.target.indexOf(USER_PREFIX) > -1) {
       const userId = task.target.replace(USER_PREFIX, '');
 
-      return this._api.im.open({user: userId})
+      return this._api.im.open({ user: userId })
         .then((data) => {
           if (!data.ok) {
             return callback(new Error(data.error));
           }
           task.target = data.channel.id;
-          return this._sendResponse(task, callback);  
+          return this._sendResponse(task, callback);
         })
         .catch((err) => {
           return callback(err);
@@ -296,9 +298,9 @@ export default class Response extends EventEmitter {
           if (!data.ok) {
             return callback(new Error(data.error));
           }
-  
+
           task.target = data.group.id;
-          return this._sendResponse(task, callback);  
+          return this._sendResponse(task, callback);
         })
         .catch((err) => {
           return callback(err);
@@ -404,28 +406,12 @@ export default class Response extends EventEmitter {
    * @param {function} callback
    */
   _sendFileResponse(id, file, callback) {
-    const url = 'https://slack.com/api/files.upload';
-
-    const r = request.post(url, (err, res, body) => {
-      if (err) {
-        return callback(err);
-      }
-
-      const data = JSON.parse(body);
-
-      if (!data.ok) {
-        return callback(new Error(data.error));
-      }
-
-      callback(null, data);
-    });
-
-    const form = r.form();
-
-    form.append('token', this._api._accessToken);
-    form.append('channels', id);
-    form.append('filename', file.filename);
-    form.append('filetype', getFileExtension(file.filename));
+    const bodyFormData = {
+      token: this._api._accessToken,
+      channels: id,
+      filename: file.filename,
+      filetype: getFileExtension(file.filename)
+    };
 
     /**
      * Slack API expect one of two fields, file or content.
@@ -434,10 +420,28 @@ export default class Response extends EventEmitter {
      * @see https://api.slack.com/methods/files.upload
      */
     if (file.content instanceof fs.ReadStream) {
-      form.append('file', file.content);
+      bodyFormData.file = file.content;
     } else {
-      form.append('content', file.content);
+      bodyFormData.content = file.content;
     }
+
+    const options = {
+      method: 'post',
+      url: 'https://slack.com/api/files.upload',
+      data: querystring.stringify(bodyFormData)
+    };
+
+    axios(options)
+      .then(response => {
+        const data = response.data;
+
+        if (!data.ok) {
+          return callback(new Error(data.error));
+        }
+
+        callback(null, data);
+      })
+      .catch(err => callback(err));
   }
 
   /**

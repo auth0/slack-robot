@@ -6,6 +6,6 @@ export default function dynamicMentionAcl(req, res, next) {
 
   // you need to mention bot in channel / group
   if (req.message.value.mentioned) {
-    next();
+    return next();
   }
 }

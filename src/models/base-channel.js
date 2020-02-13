@@ -125,7 +125,6 @@ BaseChannel.prototype.getMessageByTs = function getMessageByTs(ts) {
  * @param {Object} message
  */
 BaseChannel.prototype.addMessage = function addMessage(message) {
-  // TODO(leah): Do a reverse walk of this and compare the timestamps as an extra guarantee?
   this.history.push(message);
 
   if (message.ts > this._maxTs && !message.hidden) {
