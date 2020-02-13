@@ -1,6 +1,6 @@
 {
   "name": "slack-robot",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "description": "Simple robot for your slack integration",
   "main": "index.js",
   "scripts": {
