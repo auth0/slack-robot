@@ -1,7 +1,8 @@
 import Log from 'log';
 import EventEmitter from 'eventemitter3';
 import Promise from 'bluebird';
-import { RTMClient, WebClient } from '@slack/client';
+import { WebClient } from '@slack/web-api';
+import { RTMClient } from '@slack/rtm-api';
 import Listeners from './Listeners';
 import Message from './Message';
 import Request from './Request';
@@ -439,8 +440,8 @@ export default class Robot extends EventEmitter {
     new Promise(resolve => {
       return resolve(callback(request, response));
     })
-    .then(() => this.emit(ROBOT_EVENTS.REQUEST_HANDLED, request))
-    .catch(err => this.emit(ROBOT_EVENTS.ERROR, err));
+      .then(() => this.emit(ROBOT_EVENTS.REQUEST_HANDLED, request))
+      .catch(err => this.emit(ROBOT_EVENTS.ERROR, err));
   }
 
   /**

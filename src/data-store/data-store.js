@@ -365,7 +365,7 @@ SlackDataStore.prototype.handleRtmMessage = function handleRtmMessage(
     // If there's a custom handler for the message subtype, use that, otherwise default to adding
     // the message to the base channel history
     handler = handler || this._messageHandlers[
-        makeMessageEventWithSubtype('rtm_client_add_message')];
+      makeMessageEventWithSubtype('rtm_client_add_message')];
   } else {
     handler = this._messageHandlers[messageType];
   }
@@ -379,8 +379,7 @@ SlackDataStore.prototype.handleRtmMessage = function handleRtmMessage(
         handler(this, message);
       }
     } catch (err) {
-      // TODO(leah): Do something more here?
-      console.log(err);
+      throw err;
     }
   }
 };
