@@ -102,7 +102,7 @@ Model.prototype._setObjectProperty = function _setObjectProperty(key, val) {
     if (hasProperty) {
       this[key].update(val);
     } else {
-      const ModelClass = helpers.getModelClass();
+      const ModelClass = helpers.getModelClass(this);
       this[key] = new ModelClass(val);
     }
     this._properties[key] = PROPERTY_TYPES.MODEL;
