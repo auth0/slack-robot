@@ -280,7 +280,7 @@ export default class Response extends EventEmitter {
     if (task.target.indexOf(USER_PREFIX) > -1) {
       const userId = task.target.replace(USER_PREFIX, '');
 
-      return this._api.im.open({ user: userId })
+      return this._api.conversations.open({ users: userId })
         .then((data) => {
           if (!data.ok) {
             return callback(new Error(data.error));

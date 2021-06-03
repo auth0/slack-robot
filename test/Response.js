@@ -17,7 +17,7 @@ const apiMock = {
   reactions: {
     add: sinon.stub()
   },
-  im: {
+  conversations: {
     open: sinon.stub()
   },
   mpim: {
@@ -332,7 +332,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.returns(Promise.resolve(dmOpenApiMock));
+    apiMock.conversations.open.returns(Promise.resolve(dmOpenApiMock));
     apiMock.chat.postMessage.returns(Promise.resolve({}));
 
     res.text('try dm', '@daendels').send().then(() => {
@@ -398,7 +398,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.returns(Promise.reject(dmOpenApiMock));
+    apiMock.conversations.open.returns(Promise.reject(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.should.be.equal(dmOpenApiMock);
@@ -418,7 +418,7 @@ describe('Response', () => {
 
     res._api = apiMock;
     dataStoreMock.getUserByName.withArgs('daendels').returns({ id: 'U532122' });
-    apiMock.im.open.returns(Promise.resolve(dmOpenApiMock));
+    apiMock.conversations.open.returns(Promise.resolve(dmOpenApiMock));
 
     res.on('task_error', err => {
       err.message.should.be.equal(errorMessage);
